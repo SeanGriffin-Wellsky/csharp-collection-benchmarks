@@ -1,6 +1,6 @@
 # C# Collection Benchmarks
 
-One of the most fundamental questions developers must ask themselves repeatedly when coding is: which data structure should I use? However, more subtle questions that is just as important include:
+One of the most fundamental questions developers must ask themselves repeatedly when coding is: which data structure should I use? However, more subtle questions that are just as important include:
 * Which _type_ should I use for that data structure?
 * Do I need to create defensive copies for safety?
 * What's the difference between read-only collections and immutable collections, and which should I use?
@@ -15,7 +15,7 @@ var asJson = convertToJson(filteredItems);
 return asJson;
 ```
 
-Or, more simply, using LINQ: `convertToJson(db.GetItems().Where(filter));`
+Or, more simply, using LINQ: `return convertToJson(db.GetItems().Where(filter));`
 
 What type should `db.GetItems()` return? What types should `filter()` accept and return? How about `convertToJson()`? The answers to those questions can have varying impacts to safety and performance that are often not clear. Additionally, those coming from a Java background may be surprised to learn how things work in C#, where the best answer in Java is _not_ the best answer in C#.
 
@@ -25,6 +25,8 @@ This project contains microbenchmarks that are meant to help answer these questi
 
 All benchmarks in this project use [BenchmarkDotNet](https://benchmarkdotnet.org/) and were executed on a MacBook Pro 2019 16-inch model, plugged in, with no activities other than the benchmarks.
 
+---------------------------
+
 ### Iterate list
 
 Arguably the most common pattern you'll find in a program is to create a list of items in a single thread and then iterate over those unchanging items. The included `IterationBenchy` tests the performance and memory characteristics of various collection types when used in this pattern for both a list of 100 items and a list of 1000 items.
@@ -32,9 +34,11 @@ Arguably the most common pattern you'll find in a program is to create a list of
 #### Benchmark Results
 
 BenchmarkDotNet=v0.13.1, OS=macOS Monterey 12.3.1 (21E258) [Darwin 21.4.0]
+
 Intel Core i9-9980HK CPU 2.40GHz, 1 CPU, 16 logical and 8 physical cores
-.NET SDK=6.0.101
-  [Host]     : .NET 6.0.1 (6.0.121.56705), X64 RyuJIT
+
+.NET SDK=6.0.101<br>
+  [Host]     : .NET 6.0.1 (6.0.121.56705), X64 RyuJIT<br>
   DefaultJob : .NET 6.0.1 (6.0.121.56705), X64 RyuJIT
 
 |                                           Method |    N |         Mean |        Error |       StdDev |  Gen 0 |  Gen 1 | Allocated |
@@ -90,9 +94,11 @@ Another common pattern is similar to the iteration example above, but instead of
 #### Benchmark Results
 
 BenchmarkDotNet=v0.13.1, OS=macOS Monterey 12.3.1 (21E258) [Darwin 21.4.0]
+
 Intel Core i9-9980HK CPU 2.40GHz, 1 CPU, 16 logical and 8 physical cores
-.NET SDK=6.0.101
-  [Host]     : .NET 6.0.1 (6.0.121.56705), X64 RyuJIT
+
+.NET SDK=6.0.101<br>
+  [Host]     : .NET 6.0.1 (6.0.121.56705), X64 RyuJIT<br>
   DefaultJob : .NET 6.0.1 (6.0.121.56705), X64 RyuJIT
 
 |                                             Method |    N |        Mean |     Error |    StdDev |      Median |  Gen 0 |  Gen 1 | Allocated |
