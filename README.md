@@ -21,6 +21,10 @@ What type should `db.GetItems()` return? What types should `filter()` accept and
 
 This project contains microbenchmarks that are meant to help answer these questions.
 
+#### For Those Coming from Java
+
+As an aside, before getting to the C# benchmarks below, a quick note about the difference between the .NET immutable collections and the Guava immutable collections often used in Java development, since these are quite different. The Guava immutable collections _disable_ mutation and are meant for very fast and efficient consumption, whether single-threaded or multi-threaded. The .NET immutable collections, however, _enable_ mutation but do so in such a way that the modification is efficiently returned as a separate collection instance. This difference makes the Guava immutable collections appropriate for **consumption but not production**, while the .NET immutable collections are appropriate for **thread-safe production but not necessarily efficient consumption**.
+
 ## Benchmarks
 
 All benchmarks in this project use [BenchmarkDotNet](https://benchmarkdotnet.org/) and were executed on a MacBook Pro 2019 16-inch model, plugged in, with no activities other than the benchmarks.
