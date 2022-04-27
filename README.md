@@ -42,8 +42,7 @@ BenchmarkDotNet=v0.13.1, OS=macOS Monterey 12.3.1 (21E258) [Darwin 21.4.0]
 Intel Core i9-9980HK CPU 2.40GHz, 1 CPU, 16 logical and 8 physical cores
 
 .NET SDK=6.0.101<br>
-  [Host]     : .NET 6.0.1 (6.0.121.56705), X64 RyuJIT<br>
-  DefaultJob : .NET 6.0.1 (6.0.121.56705), X64 RyuJIT
+  [Host]     : .NET 6.0.1 (6.0.121.56705), X64 RyuJIT
 
 |                                           Method |    N |         Mean |        Error |       StdDev |  Gen 0 |  Gen 1 | Allocated |
 |------------------------------------------------- |----- |-------------:|-------------:|-------------:|-------:|-------:|----------:|
@@ -74,11 +73,12 @@ Intel Core i9-9980HK CPU 2.40GHz, 1 CPU, 16 logical and 8 physical cores
 
 * The interface is more than just a type change, **it's a behavior change**
   * Iterating through `IList` or `ICollection` is 10x slower than iterating through `List`
+  * The reason for this is `List.GetEnumerator` returns a List-specific concrete class with direct method calls while `IList.GetEnumerator` returns a generic `IEnumerator<T>` with virtual method calls.
 * Iterating over `IEnumerable` vs. `ICollection` is the same
 * Iterating over `IReadOnlyCollection` vs. `ICollection` is the same
-* Converting a `List` to a mutable array provides no performance benefit and duplicates the memory
-* Converting the `List` to a read-only array vs. `IReadOnlyCollection` (`Array.AsReadOnly(data.ToArray)` vs. `List.AsReadOnly`) is nearly 40% faster but at the expense of duplicating memory
-* Using `ImmutableList` is slow and uses 6x the memory
+* Converting a `List` to a mutable array provides no performance benefit and duplicates the memory allocation
+* Converting the `List` to a read-only array vs. `IReadOnlyCollection` (`Array.AsReadOnly(data.ToArray)` vs. `List.AsReadOnly`) is nearly 40% faster but at the expense of duplicating memory allocation
+* Using `ImmutableList` is slow and uses 6x the memory allocation
 * Iterating over `IImmutableList` vs. `IReadOnlyCollection` for `ImmutableList` is the same
 * Converting to and using `ImmutableArray` is faster than converting to and using read-only array with slightly less memory overhead _but only if not cast to `IReadOnlyCollection`!_
 
@@ -87,7 +87,7 @@ Intel Core i9-9980HK CPU 2.40GHz, 1 CPU, 16 logical and 8 physical cores
 * **For public APIs**: for best safety, lowest memory usage, and best performance, use `IReadOnlyCollection` / `List.AsReadOnly`.
 * **For private APIs**: for best performance, if read-only safety is not important, keep as `List`
 * **For private APIs**: for best safety and best performance, use `ImmutableArray` if iterating many times, or `IReadOnlyCollection` / `List.AsReadOnly` if iterating minimally
-* Do not use `ImmutableList`
+* Do not use `ImmutableList` _for this use case_ (the ImmutableCollections are certainly appropriate when concurrent modification is needed)
 
 ---------------------------
 
@@ -102,40 +102,40 @@ BenchmarkDotNet=v0.13.1, OS=macOS Monterey 12.3.1 (21E258) [Darwin 21.4.0]
 Intel Core i9-9980HK CPU 2.40GHz, 1 CPU, 16 logical and 8 physical cores
 
 .NET SDK=6.0.101<br>
-  [Host]     : .NET 6.0.1 (6.0.121.56705), X64 RyuJIT<br>
-  DefaultJob : .NET 6.0.1 (6.0.121.56705), X64 RyuJIT
+  [Host]     : .NET 6.0.1 (6.0.121.56705), X64 RyuJIT
 
-|                                             Method |    N |        Mean |     Error |    StdDev |      Median |  Gen 0 |  Gen 1 | Allocated |
-|--------------------------------------------------- |----- |------------:|----------:|----------:|------------:|-------:|-------:|----------:|
-|                             AggregateAsMutableList |  100 |    744.8 ns |  14.14 ns |  13.89 ns |    739.6 ns | 0.0048 |      - |      40 B |
-|                            AggregateAsMutableIList |  100 |    733.9 ns |   5.50 ns |   4.87 ns |    732.6 ns | 0.0048 |      - |      40 B |
-|                      AggregateAsMutableICollection |  100 |    721.5 ns |   4.07 ns |   3.80 ns |    720.5 ns | 0.0048 |      - |      40 B |
-|                             AggregateAsIEnumerable |  100 |    726.6 ns |   5.10 ns |   4.53 ns |    724.5 ns | 0.0048 |      - |      40 B |
-|                            AggregateAsMutableArray |  100 |    590.9 ns |  10.98 ns |  10.79 ns |    593.0 ns | 0.1020 |      - |     856 B |
-|                     AggregateAsIReadOnlyCollection |  100 |    754.5 ns |  12.97 ns |  12.13 ns |    756.2 ns | 0.0076 |      - |      64 B |
-|                           AggregateAsReadOnlyArray |  100 |    561.1 ns |   3.46 ns |   3.07 ns |    560.6 ns | 0.1049 |      - |     880 B |
-|  AggregateAsImmutableListCastToIReadOnlyCollection |  100 |  3,910.4 ns |  40.72 ns |  38.09 ns |  3,904.1 ns | 0.5875 |      - |   4,920 B |
-|                          AggregateAsIImmutableList |  100 |  3,954.7 ns |  57.94 ns |  59.50 ns |  3,950.4 ns | 0.5875 |      - |   4,920 B |
-| AggregateAsImmutableArrayCastToIReadOnlyCollection |  100 |    606.2 ns |   6.51 ns |   6.09 ns |    603.8 ns | 0.1049 |      - |     880 B |
-|                          AggregateAsImmutableArray |  100 |    239.1 ns |   2.09 ns |   1.95 ns |    238.6 ns | 0.0982 |      - |     824 B |
-|                             AggregateAsMutableList | 1000 |  7,009.6 ns |  51.98 ns |  43.41 ns |  7,014.7 ns |      - |      - |      40 B |
-|                            AggregateAsMutableIList | 1000 |  6,994.6 ns |  21.75 ns |  18.16 ns |  6,998.2 ns |      - |      - |      40 B |
-|                      AggregateAsMutableICollection | 1000 |  6,975.2 ns |  75.48 ns |  70.61 ns |  6,952.9 ns |      - |      - |      40 B |
-|                             AggregateAsIEnumerable | 1000 |  7,275.0 ns | 101.48 ns |  84.74 ns |  7,313.5 ns |      - |      - |      40 B |
-|                            AggregateAsMutableArray | 1000 |  5,554.5 ns |  59.35 ns |  52.61 ns |  5,531.7 ns | 0.9613 |      - |   8,056 B |
-|                     AggregateAsIReadOnlyCollection | 1000 |  7,072.0 ns |  35.33 ns |  29.50 ns |  7,073.5 ns | 0.0076 |      - |      64 B |
-|                           AggregateAsReadOnlyArray | 1000 |  5,552.7 ns |  84.43 ns |  78.98 ns |  5,525.8 ns | 0.9613 |      - |   8,080 B |
-|  AggregateAsImmutableListCastToIReadOnlyCollection | 1000 | 37,583.0 ns | 242.63 ns | 215.08 ns | 37,590.4 ns | 5.7373 | 0.4272 |  48,120 B |
-|                          AggregateAsIImmutableList | 1000 | 37,762.3 ns | 370.28 ns | 328.25 ns | 37,659.5 ns | 5.7373 | 0.4272 |  48,120 B |
-| AggregateAsImmutableArrayCastToIReadOnlyCollection | 1000 |  5,600.3 ns |  67.80 ns |  60.10 ns |  5,606.4 ns | 0.9613 |      - |   8,080 B |
-|                          AggregateAsImmutableArray | 1000 |  2,148.6 ns |  39.12 ns |  92.98 ns |  2,112.7 ns | 0.9575 |      - |   8,024 B |
+|                                             Method |    N |        Mean |     Error |    StdDev |  Gen 0 |  Gen 1 | Allocated |
+|--------------------------------------------------- |----- |------------:|----------:|----------:|-------:|-------:|----------:|
+|                             AggregateAsMutableList |  100 |    744.8 ns |  14.14 ns |  13.89 ns | 0.0048 |      - |      40 B |
+|                            AggregateAsMutableIList |  100 |    733.9 ns |   5.50 ns |   4.87 ns | 0.0048 |      - |      40 B |
+|                      AggregateAsMutableICollection |  100 |    721.5 ns |   4.07 ns |   3.80 ns | 0.0048 |      - |      40 B |
+|                             AggregateAsIEnumerable |  100 |    726.6 ns |   5.10 ns |   4.53 ns | 0.0048 |      - |      40 B |
+|                            AggregateAsMutableArray |  100 |    590.9 ns |  10.98 ns |  10.79 ns | 0.1020 |      - |     856 B |
+|                     AggregateAsIReadOnlyCollection |  100 |    754.5 ns |  12.97 ns |  12.13 ns | 0.0076 |      - |      64 B |
+|                           AggregateAsReadOnlyArray |  100 |    561.1 ns |   3.46 ns |   3.07 ns | 0.1049 |      - |     880 B |
+|  AggregateAsImmutableListCastToIReadOnlyCollection |  100 |  3,910.4 ns |  40.72 ns |  38.09 ns | 0.5875 |      - |   4,920 B |
+|                          AggregateAsIImmutableList |  100 |  3,954.7 ns |  57.94 ns |  59.50 ns | 0.5875 |      - |   4,920 B |
+| AggregateAsImmutableArrayCastToIReadOnlyCollection |  100 |    606.2 ns |   6.51 ns |   6.09 ns | 0.1049 |      - |     880 B |
+|                          AggregateAsImmutableArray |  100 |    239.1 ns |   2.09 ns |   1.95 ns | 0.0982 |      - |     824 B |
+|                             AggregateAsMutableList | 1000 |  7,009.6 ns |  51.98 ns |  43.41 ns |      - |      - |      40 B |
+|                            AggregateAsMutableIList | 1000 |  6,994.6 ns |  21.75 ns |  18.16 ns |      - |      - |      40 B |
+|                      AggregateAsMutableICollection | 1000 |  6,975.2 ns |  75.48 ns |  70.61 ns |      - |      - |      40 B |
+|                             AggregateAsIEnumerable | 1000 |  7,275.0 ns | 101.48 ns |  84.74 ns |      - |      - |      40 B |
+|                            AggregateAsMutableArray | 1000 |  5,554.5 ns |  59.35 ns |  52.61 ns | 0.9613 |      - |   8,056 B |
+|                     AggregateAsIReadOnlyCollection | 1000 |  7,072.0 ns |  35.33 ns |  29.50 ns | 0.0076 |      - |      64 B |
+|                           AggregateAsReadOnlyArray | 1000 |  5,552.7 ns |  84.43 ns |  78.98 ns | 0.9613 |      - |   8,080 B |
+|  AggregateAsImmutableListCastToIReadOnlyCollection | 1000 | 37,583.0 ns | 242.63 ns | 215.08 ns | 5.7373 | 0.4272 |  48,120 B |
+|                          AggregateAsIImmutableList | 1000 | 37,762.3 ns | 370.28 ns | 328.25 ns | 5.7373 | 0.4272 |  48,120 B |
+| AggregateAsImmutableArrayCastToIReadOnlyCollection | 1000 |  5,600.3 ns |  67.80 ns |  60.10 ns | 0.9613 |      - |   8,080 B |
+|                          AggregateAsImmutableArray | 1000 |  2,148.6 ns |  39.12 ns |  92.98 ns | 0.9575 |      - |   8,024 B |
+
 
 #### Observations
 
-* The difference that was present in the Iteration benchmark between interface and implementation types isn't there
+* The difference that was present in the Iteration benchmark between interface and implementation types isn't there; the implementation type has no speed advantage over the interface type
 * `ImmutableList` is still the worst
 * `ImmutableArray` is the best performance of all (as long as not cast to `IReadOnlyCollection`)
 
 #### Conclusions
 
-The same as in the Iteration benchmark, except here there's no penalty for defining your APIs with `IReadOnlyCollection` / `ICollection` / `IEnumerable` if keeping the collection as a `List`. Also, always prefer `ToImmutableArray` over `ToArray` as both memory consumption and performance is better.
+The same as in the Iteration benchmark, except here there's no penalty for defining your APIs with `IReadOnlyCollection` / `ICollection` / `IEnumerable` if keeping the collection as a `List`. Also, prefer `ToImmutableArray` over `Array.AsReadOnly(data.ToArray())` as both memory consumption and performance is better.
