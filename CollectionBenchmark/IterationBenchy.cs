@@ -1,10 +1,13 @@
 using BenchmarkDotNet.Attributes;
+using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
+using System.Linq;
 using System.Runtime.InteropServices;
 
 namespace CollectionBenchmark
 {
-    [MemoryDiagnoser]
+    [MemoryDiagnoser(false)]
     public class IterationBenchy
     {
         [Params(100, 1000)] public int N;
@@ -43,106 +46,106 @@ namespace CollectionBenchmark
             return accumulator;
         }
 
-        // [Benchmark]
-        // public int IterateAsMutableIList()
-        // {
-        //     IList<string> lst = data;
-        //
-        //     var accumulator = 0;
-        //     foreach (string s in lst) accumulator++;
-        //     return accumulator;
-        // }
-        //
-        // [Benchmark]
-        // public int IterateAsMutableICollection()
-        // {
-        //     ICollection<string> lst = data;
-        //
-        //     var accumulator = 0;
-        //     foreach (string s in lst) accumulator++;
-        //     return accumulator;
-        // }
-        //
-        // [Benchmark]
-        // public int IterateAsIEnumerable()
-        // {
-        //     IEnumerable<string> lst = data;
-        //
-        //     var accumulator = 0;
-        //     foreach (string s in lst) accumulator++;
-        //     return accumulator;
-        // }
-        //
-        // [Benchmark]
-        // public int IterateAsMutableArray()
-        // {
-        //     string[] lst = data.ToArray();
-        //
-        //     var x = lst.ElementAtOrDefault(1);
-        //
-        //     var accumulator = 0;
-        //     foreach (string s in lst) accumulator++;
-        //     return accumulator;
-        // }
-        //
-        // [Benchmark]
-        // public int IterateAsIReadOnlyCollection()
-        // {
-        //     IReadOnlyCollection<string> lst = data.AsReadOnly();
-        //
-        //     var accumulator = 0;
-        //     foreach (string s in lst) accumulator++;
-        //     return accumulator;
-        // }
-        //
-        // [Benchmark]
-        // public int IterateAsReadOnlyArray()
-        // {
-        //     IReadOnlyCollection<string> lst = Array.AsReadOnly(data.ToArray());
-        //
-        //     var accumulator = 0;
-        //     foreach (string s in lst) accumulator++;
-        //     return accumulator;
-        // }
-        //
-        // [Benchmark]
-        // public int IterateAsImmutableListCastToIReadOnlyCollection()
-        // {
-        //     IReadOnlyCollection<string> lst = data.ToImmutableList();
-        //
-        //     var accumulator = 0;
-        //     foreach (string s in lst) accumulator++;
-        //     return accumulator;
-        // }
-        //
-        // [Benchmark]
-        // public int IterateAsIImmutableList()
-        // {
-        //     IImmutableList<string> lst = data.ToImmutableList();
-        //
-        //     var accumulator = 0;
-        //     foreach (string s in lst) accumulator++;
-        //     return accumulator;
-        // }
-        //
-        // [Benchmark]
-        // public int IterateAsImmutableArrayCastToIReadOnlyCollection()
-        // {
-        //     IReadOnlyCollection<string> lst = data.ToImmutableArray();
-        //
-        //     var accumulator = 0;
-        //     foreach (string s in lst) accumulator++;
-        //     return accumulator;
-        // }
-        //
-        // [Benchmark]
-        // public int IterateAsImmutableArray()
-        // {
-        //     ImmutableArray<string> lst = data.ToImmutableArray();
-        //
-        //     var accumulator = 0;
-        //     foreach (string s in lst) accumulator++;
-        //     return accumulator;
-        // }
+        [Benchmark]
+        public int IterateAsMutableIList()
+        {
+            IList<string> lst = data;
+
+            var accumulator = 0;
+            foreach (string s in lst) accumulator++;
+            return accumulator;
+        }
+
+        [Benchmark]
+        public int IterateAsMutableICollection()
+        {
+            ICollection<string> lst = data;
+
+            var accumulator = 0;
+            foreach (string s in lst) accumulator++;
+            return accumulator;
+        }
+
+        [Benchmark]
+        public int IterateAsIEnumerable()
+        {
+            IEnumerable<string> lst = data;
+
+            var accumulator = 0;
+            foreach (string s in lst) accumulator++;
+            return accumulator;
+        }
+
+        [Benchmark]
+        public int IterateAsMutableArray()
+        {
+            string[] lst = data.ToArray();
+
+            var x = lst.ElementAtOrDefault(1);
+
+            var accumulator = 0;
+            foreach (string s in lst) accumulator++;
+            return accumulator;
+        }
+
+        [Benchmark]
+        public int IterateAsIReadOnlyCollection()
+        {
+            IReadOnlyCollection<string> lst = data.AsReadOnly();
+
+            var accumulator = 0;
+            foreach (string s in lst) accumulator++;
+            return accumulator;
+        }
+
+        [Benchmark]
+        public int IterateAsReadOnlyArray()
+        {
+            IReadOnlyCollection<string> lst = Array.AsReadOnly(data.ToArray());
+
+            var accumulator = 0;
+            foreach (string s in lst) accumulator++;
+            return accumulator;
+        }
+
+        [Benchmark]
+        public int IterateAsImmutableListCastToIReadOnlyCollection()
+        {
+            IReadOnlyCollection<string> lst = data.ToImmutableList();
+
+            var accumulator = 0;
+            foreach (string s in lst) accumulator++;
+            return accumulator;
+        }
+
+        [Benchmark]
+        public int IterateAsIImmutableList()
+        {
+            IImmutableList<string> lst = data.ToImmutableList();
+
+            var accumulator = 0;
+            foreach (string s in lst) accumulator++;
+            return accumulator;
+        }
+
+        [Benchmark]
+        public int IterateAsImmutableArrayCastToIReadOnlyCollection()
+        {
+            IReadOnlyCollection<string> lst = data.ToImmutableArray();
+
+            var accumulator = 0;
+            foreach (string s in lst) accumulator++;
+            return accumulator;
+        }
+
+        [Benchmark]
+        public int IterateAsImmutableArray()
+        {
+            ImmutableArray<string> lst = data.ToImmutableArray();
+
+            var accumulator = 0;
+            foreach (string s in lst) accumulator++;
+            return accumulator;
+        }
     }
 }

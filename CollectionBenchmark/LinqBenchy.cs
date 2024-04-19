@@ -6,7 +6,7 @@ using System.Linq;
 
 namespace CollectionBenchmark
 {
-    [MemoryDiagnoser]
+    [MemoryDiagnoser(false)]
     public class LinqBenchy
     {
         [Params(100, 1000)] public int N;
