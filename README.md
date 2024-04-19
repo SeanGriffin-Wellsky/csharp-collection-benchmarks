@@ -206,8 +206,8 @@ Intel Core i9-9980HK CPU 2.40GHz, 1 CPU, 16 logical and 8 physical cores
 * Using `ImmutableList` is slow and uses 6x the memory allocation
 * Iterating over `IImmutableList` vs. `IReadOnlyCollection` for `ImmutableList` is the same
 * Converting to and using `ImmutableArray` is faster than converting to and using read-only array with slightly less memory overhead _but only if not cast to `IReadOnlyCollection`!_
-* List iteration got much faster between .NET Core 3.1 and .NET 6
-* .NET 7 is, on average, 4-5% faster than .NET 6
+* List iteration got much faster between .NET Core 5 and .NET 6
+* .NET 8 is considerably faster in most scenarios than all prior versions
 * Converting a mutable List (that never changes) to a Span first is fastest of all
 
 #### Conclusions
