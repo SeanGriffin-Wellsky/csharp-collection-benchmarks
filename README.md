@@ -37,113 +37,162 @@ Arguably the most common pattern you'll find in a program is to create a list of
 
 #### Benchmark Results
 
-BenchmarkDotNet=v0.13.2, OS=macOS Monterey 12.6.1 (21G217) [Darwin 21.6.0]
+BenchmarkDotNet v0.13.12, macOS Sonoma 14.4.1 (23E224) [Darwin 23.4.0]
 
 Intel Core i9-9980HK CPU 2.40GHz, 1 CPU, 16 logical and 8 physical cores
 
-.NET SDK=7.0.100<br>
-  [Host]     : .NET 7.0.0 (7.0.22.51805), X64 RyuJIT AVX2<br>
+.NET SDK=8.0.101<br>
   Job-VFPNOY : .NET Core 3.1.20 (CoreCLR 4.700.21.47003, CoreFX 4.700.21.47101), X64 RyuJIT AVX2<br>
+  Job-VZMYMY : .NET 5.0.11 (5.0.1121.47308), X64 RyuJIT AVX2<br>
   Job-OVRMSJ : .NET 6.0.8 (6.0.822.36306), X64 RyuJIT AVX2<br>
-  Job-FDUCSD : .NET 7.0.0 (7.0.22.51805), X64 RyuJIT AVX2
+  Job-FDUCSD : .NET 7.0.0 (7.0.22.51805), X64 RyuJIT AVX2<br>
+  Job-HTCTKA : .NET 8.0.1 (8.0.123.58001), X64 RyuJIT AVX2 
 
-  |                                           Method |       Runtime |    N |         Mean |        Error |      StdDev | Allocated |
-  |------------------------------------------------- |-------------- |----- |-------------:|-------------:|------------:|----------:|
-  |                             IterateAsMutableList | .NET Core 3.1 |  100 |     333.9 ns |      2.61 ns |     2.44 ns |         - |
-  |                             IterateAsMutableList |      .NET 6.0 |  100 |     87.39 ns |     0.754 ns |    0.668 ns |         - |
-  |                             IterateAsMutableList |      .NET 7.0 |  100 |     80.01 ns |     0.567 ns |    0.473 ns |         - |
-  |                                                  |               |      |              |              |             |           |
-  |                                IterateListAsSpan | .NET Core 3.1 |  N/A |          N/A |          N/A |         N/A |         - |
-  |                                IterateListAsSpan |      .NET 6.0 |  100 |     34.64 ns |     0.451 ns |    0.376 ns |         - |
-  |                                IterateListAsSpan |      .NET 7.0 |  100 |     33.45 ns |     0.336 ns |    0.298 ns |         - |
-  |                                                  |               |      |              |              |             |           |                                                  |               |      |              |              |             |           |
-  |                            IterateAsMutableIList | .NET Core 3.1 |  100 |     880.0 ns |      4.86 ns |     3.79 ns |      40 B |
-  |                            IterateAsMutableIList |      .NET 6.0 |  100 |    907.83 ns |    10.521 ns |    9.327 ns |      40 B |
-  |                            IterateAsMutableIList |      .NET 7.0 |  100 |    877.90 ns |     9.787 ns |    9.155 ns |      40 B |
-  |                                                  |               |      |              |              |             |           |
-  |                      IterateAsMutableICollection | .NET Core 3.1 |  100 |     897.0 ns |      7.09 ns |     6.63 ns |      40 B |
-  |                      IterateAsMutableICollection |      .NET 6.0 |  100 |    913.09 ns |    13.996 ns |   13.092 ns |      40 B |
-  |                      IterateAsMutableICollection |      .NET 7.0 |  100 |    872.09 ns |     6.881 ns |    5.746 ns |      40 B |
-  |                                                  |               |      |              |              |             |           |
-  |                             IterateAsIEnumerable | .NET Core 3.1 |  100 |     888.0 ns |      8.07 ns |     7.15 ns |      40 B |
-  |                             IterateAsIEnumerable |      .NET 6.0 |  100 |    903.70 ns |     5.133 ns |    4.801 ns |      40 B |
-  |                             IterateAsIEnumerable |      .NET 7.0 |  100 |    873.42 ns |     9.161 ns |    8.569 ns |      40 B |
-  |                                                  |               |      |              |              |             |           |
-  |                            IterateAsMutableArray | .NET Core 3.1 |  100 |     156.3 ns |      1.71 ns |     1.43 ns |     824 B |
-  |                            IterateAsMutableArray |      .NET 6.0 |  100 |    141.37 ns |     1.833 ns |    1.625 ns |     824 B |
-  |                            IterateAsMutableArray |      .NET 7.0 |  100 |    125.43 ns |     1.218 ns |    1.017 ns |     824 B |
-  |                                                  |               |      |              |              |             |           |
-  |                     IterateAsIReadOnlyCollection | .NET Core 3.1 |  100 |     835.7 ns |      7.41 ns |     6.94 ns |      64 B |
-  |                     IterateAsIReadOnlyCollection |      .NET 6.0 |  100 |    909.55 ns |    14.062 ns |   12.466 ns |      64 B |
-  |                     IterateAsIReadOnlyCollection |      .NET 7.0 |  100 |    870.09 ns |     6.275 ns |    5.240 ns |      64 B |
-  |                                                  |               |      |              |              |             |           |
-  |                           IterateAsReadOnlyArray | .NET Core 3.1 |  100 |     548.7 ns |      6.07 ns |     5.38 ns |     880 B |
-  |                           IterateAsReadOnlyArray |      .NET 6.0 |  100 |    510.88 ns |     7.013 ns |    6.560 ns |     880 B |
-  |                           IterateAsReadOnlyArray |      .NET 7.0 |  100 |    478.02 ns |     5.987 ns |    4.999 ns |     880 B |
-  |                                                  |               |      |              |              |             |           |
-  |  IterateAsImmutableListCastToIReadOnlyCollection | .NET Core 3.1 |  100 |  10,080.3 ns |    191.44 ns |   179.07 ns |    4920 B |
-  |  IterateAsImmutableListCastToIReadOnlyCollection |      .NET 6.0 |  100 |  6,509.74 ns |    62.137 ns |   58.123 ns |    4920 B |
-  |  IterateAsImmutableListCastToIReadOnlyCollection |      .NET 7.0 |  100 |  6,440.87 ns |    59.982 ns |   53.173 ns |    4920 B |
-  |                                                  |               |      |              |              |             |           |
-  |                          IterateAsIImmutableList | .NET Core 3.1 |  100 |   9,827.8 ns |     61.13 ns |    51.05 ns |    4920 B |
-  |                          IterateAsIImmutableList |      .NET 6.0 |  100 |  6,469.47 ns |    61.308 ns |   54.348 ns |    4920 B |
-  |                          IterateAsIImmutableList |      .NET 7.0 |  100 |  6,395.03 ns |    59.409 ns |   49.609 ns |    4920 B |
-  |                                                  |               |      |              |              |             |           |
-  | IterateAsImmutableArrayCastToIReadOnlyCollection | .NET Core 3.1 |  100 |     614.9 ns |      7.40 ns |     6.92 ns |     880 B |
-  | IterateAsImmutableArrayCastToIReadOnlyCollection |      .NET 6.0 |  100 |    609.71 ns |     8.265 ns |    7.731 ns |     880 B |
-  | IterateAsImmutableArrayCastToIReadOnlyCollection |      .NET 7.0 |  100 |    560.79 ns |    10.286 ns |   14.751 ns |     880 B |
-  |                                                  |               |      |              |              |             |           |
-  |                          IterateAsImmutableArray | .NET Core 3.1 |  100 |     149.6 ns |      2.69 ns |     2.52 ns |     824 B |
-  |                          IterateAsImmutableArray |      .NET 6.0 |  100 |    130.68 ns |     1.506 ns |    1.335 ns |     824 B |
-  |                          IterateAsImmutableArray |      .NET 7.0 |  100 |    126.70 ns |     1.682 ns |    1.491 ns |     824 B |
-  |                                                  |               |      |              |              |             |           |
-  |                             IterateAsMutableList | .NET Core 3.1 | 1000 |   3,168.5 ns |     46.34 ns |    43.35 ns |         - |
-  |                             IterateAsMutableList |      .NET 6.0 | 1000 |    757.48 ns |     5.763 ns |    5.109 ns |         - |
-  |                             IterateAsMutableList |      .NET 7.0 | 1000 |    727.42 ns |     5.946 ns |    4.965 ns |         - |
-  |                                                  |               |      |              |              |             |           |
-  |                                IterateListAsSpan | .NET Core 3.1 |  N/A |          N/A |          N/A |         N/A |         - |
-  |                                IterateListAsSpan |      .NET 6.0 | 1000 |    253.82 ns |     2.112 ns |    1.764 ns |         - |
-  |                                IterateListAsSpan |      .NET 7.0 | 1000 |    258.34 ns |     4.988 ns |    9.847 ns |         - |
-  |                                                  |               |      |              |              |             |           |
-  |                            IterateAsMutableIList | .NET Core 3.1 | 1000 |   8,575.3 ns |     49.48 ns |    38.63 ns |      40 B |
-  |                            IterateAsMutableIList |      .NET 6.0 | 1000 |  8,699.82 ns |    95.371 ns |   84.544 ns |      40 B |
-  |                            IterateAsMutableIList |      .NET 7.0 | 1000 |  8,202.01 ns |    67.443 ns |   56.318 ns |      40 B |
-  |                                                  |               |      |              |              |             |           |
-  |                      IterateAsMutableICollection | .NET Core 3.1 | 1000 |   8,600.0 ns |     80.31 ns |    71.19 ns |      40 B |
-  |                      IterateAsMutableICollection |      .NET 6.0 | 1000 |  8,767.50 ns |   117.449 ns |  109.862 ns |      40 B |
-  |                      IterateAsMutableICollection |      .NET 7.0 | 1000 |  8,275.36 ns |   128.342 ns |  120.051 ns |      40 B |
-  |                                                  |               |      |              |              |             |           |
-  |                             IterateAsIEnumerable | .NET Core 3.1 | 1000 |   8,610.6 ns |     77.57 ns |    68.76 ns |      40 B |
-  |                             IterateAsIEnumerable |      .NET 6.0 | 1000 |  8,716.24 ns |    83.288 ns |   77.907 ns |      40 B |
-  |                             IterateAsIEnumerable |      .NET 7.0 | 1000 |  8,275.69 ns |    92.752 ns |   82.222 ns |      40 B |
-  |                                                  |               |      |              |              |             |           |
-  |                            IterateAsMutableArray | .NET Core 3.1 | 1000 |     808.1 ns |      9.81 ns |     8.19 ns |    8024 B |
-  |                            IterateAsMutableArray |      .NET 6.0 | 1000 |    840.51 ns |    16.081 ns |   31.742 ns |    8024 B |
-  |                            IterateAsMutableArray |      .NET 7.0 | 1000 |    802.35 ns |    13.309 ns |   11.798 ns |    8024 B |
-  |                                                  |               |      |              |              |             |           |
-  |                     IterateAsIReadOnlyCollection | .NET Core 3.1 | 1000 |   8,200.6 ns |    127.99 ns |   119.72 ns |      64 B |
-  |                     IterateAsIReadOnlyCollection |      .NET 6.0 | 1000 |  8,770.47 ns |   130.256 ns |  121.842 ns |      64 B |
-  |                     IterateAsIReadOnlyCollection |      .NET 7.0 | 1000 |  8,549.36 ns |    90.578 ns |   80.295 ns |      64 B |
-  |                                                  |               |      |              |              |             |           |
-  |                           IterateAsReadOnlyArray | .NET Core 3.1 | 1000 |   5,076.5 ns |     64.05 ns |    56.78 ns |    8080 B |
-  |                           IterateAsReadOnlyArray |      .NET 6.0 | 1000 |  4,562.04 ns |    86.463 ns |   99.570 ns |    8080 B |
-  |                           IterateAsReadOnlyArray |      .NET 7.0 | 1000 |  4,181.67 ns |    55.298 ns |   46.176 ns |    8080 B |
-  |                                                  |               |      |              |              |             |           |
-  |  IterateAsImmutableListCastToIReadOnlyCollection | .NET Core 3.1 | 1000 |  99,576.8 ns |  1,438.09 ns | 1,274.83 ns |   48120 B |
-  |  IterateAsImmutableListCastToIReadOnlyCollection |      .NET 6.0 | 1000 | 72,208.33 ns |   722.256 ns |  675.599 ns |   48120 B |
-  |  IterateAsImmutableListCastToIReadOnlyCollection |      .NET 7.0 | 1000 | 62,622.43 ns |   533.795 ns |  445.743 ns |   48120 B |
-  |                                                  |               |      |              |              |             |           |
-  |                          IterateAsIImmutableList | .NET Core 3.1 | 1000 |  98,902.6 ns |  1,153.25 ns | 1,022.33 ns |   48121 B |
-  |                          IterateAsIImmutableList |      .NET 6.0 | 1000 | 63,337.56 ns |   505.807 ns |  422.371 ns |   48120 B |
-  |                          IterateAsIImmutableList |      .NET 7.0 | 1000 | 62,532.72 ns | 1,021.021 ns |  905.108 ns |   48120 B |
-  |                                                  |               |      |              |              |             |           |
-  | IterateAsImmutableArrayCastToIReadOnlyCollection | .NET Core 3.1 | 1000 |   5,311.7 ns |     68.45 ns |    60.68 ns |    8080 B |
-  | IterateAsImmutableArrayCastToIReadOnlyCollection |      .NET 6.0 | 1000 |  5,369.52 ns |    56.044 ns |   52.424 ns |    8080 B |
-  | IterateAsImmutableArrayCastToIReadOnlyCollection |      .NET 7.0 | 1000 |  4,825.65 ns |    71.784 ns |   67.147 ns |    8080 B |
-  |                                                  |               |      |              |              |             |           |
-  |                          IterateAsImmutableArray | .NET Core 3.1 | 1000 |     810.0 ns |     12.69 ns |    11.25 ns |    8024 B |
-  |                          IterateAsImmutableArray |      .NET 6.0 | 1000 |    806.74 ns |    12.938 ns |   11.469 ns |    8024 B |
-  |                          IterateAsImmutableArray |      .NET 7.0 | 1000 |    796.22 ns |    13.536 ns |   12.661 ns |    8024 B |
+|                                           Method |       Runtime |    N |         Mean |        Error |       StdDev | Allocated |
+|-------------------------------------------------:|--------------:|-----:|-------------:|-------------:|-------------:|----------:|
+|                                    IterateAsSpan | .NET Core 3.1 |  N/A |          N/A |          N/A |          N/A |         - |
+|                                    IterateAsSpan |      .NET 5.0 |  N/A |          N/A |          N/A |          N/A |         - |
+|                                    IterateAsSpan |      .NET 6.0 |  100 |     33.11 ns |     0.674 ns |     0.776 ns |         - |
+|                                    IterateAsSpan |      .NET 7.0 |  100 |     32.30 ns |     0.652 ns |     0.610 ns |         - |
+|                                    IterateAsSpan |      .NET 8.0 |  100 |     31.98 ns |     0.665 ns |     0.932 ns |         - |
+|                                                  |               |      |              |              |              |           |
+|                             IterateAsMutableList | .NET Core 3.1 |  100 |     333.9 ns |      2.61 ns |      2.44 ns |         - |
+|                             IterateAsMutableList |      .NET 5.0 |  100 |    305.71 ns |     6.064 ns |     6.227 ns |         - |
+|                             IterateAsMutableList |      .NET 6.0 |  100 |     97.04 ns |     1.873 ns |     2.004 ns |         - |
+|                             IterateAsMutableList |      .NET 7.0 |  100 |     79.60 ns |     1.551 ns |     1.787 ns |         - |
+|                             IterateAsMutableList |      .NET 8.0 |  100 |     54.62 ns |     0.796 ns |     0.706 ns |         - |
+|                                                  |               |      |              |              |              |           |
+|                            IterateAsMutableIList | .NET Core 3.1 |  100 |     880.0 ns |      4.86 ns |      3.79 ns |      40 B |
+|                            IterateAsMutableIList |      .NET 5.0 |  100 |    835.10 ns |    13.057 ns |    12.213 ns |      40 B |
+|                            IterateAsMutableIList |      .NET 6.0 |  100 |    975.59 ns |    19.508 ns |    20.874 ns |      40 B |
+|                            IterateAsMutableIList |      .NET 7.0 |  100 |    901.60 ns |    17.241 ns |    16.127 ns |      40 B |
+|                            IterateAsMutableIList |      .NET 8.0 |  100 |    281.74 ns |     5.329 ns |     5.472 ns |      40 B |
+|                                                  |               |      |              |              |              |           |
+|                      IterateAsMutableICollection | .NET Core 3.1 |  100 |     897.0 ns |      7.09 ns |      6.63 ns |      40 B |
+|                      IterateAsMutableICollection |      .NET 5.0 |  100 |    829.72 ns |    15.439 ns |    14.441 ns |      40 B |
+|                      IterateAsMutableICollection |      .NET 6.0 |  100 |  1,021.42 ns |    20.238 ns |    48.097 ns |      40 B |
+|                      IterateAsMutableICollection |      .NET 7.0 |  100 |    894.68 ns |    13.823 ns |    12.930 ns |      40 B |
+|                      IterateAsMutableICollection |      .NET 8.0 |  100 |    281.64 ns |     5.578 ns |     6.640 ns |      40 B |
+|                                                  |               |      |              |              |              |           |
+|                             IterateAsIEnumerable | .NET Core 3.1 |  100 |     888.0 ns |      8.07 ns |      7.15 ns |      40 B |
+|                             IterateAsIEnumerable |      .NET 5.0 |  100 |    835.58 ns |    14.329 ns |    13.403 ns |      40 B |
+|                             IterateAsIEnumerable |      .NET 6.0 |  100 |  1,007.00 ns |    19.832 ns |    27.801 ns |      40 B |
+|                             IterateAsIEnumerable |      .NET 7.0 |  100 |    903.82 ns |    17.124 ns |    19.033 ns |      40 B |
+|                             IterateAsIEnumerable |      .NET 8.0 |  100 |    278.81 ns |     5.309 ns |     6.320 ns |      40 B |
+|                                                  |               |      |              |              |              |           |
+|                            IterateAsMutableArray | .NET Core 3.1 |  100 |     156.3 ns |      1.71 ns |      1.43 ns |     824 B |
+|                            IterateAsMutableArray |      .NET 5.0 |  100 |    123.27 ns |     2.482 ns |     5.602 ns |     824 B |
+|                            IterateAsMutableArray |      .NET 6.0 |  100 |    145.39 ns |     4.062 ns |    11.912 ns |     824 B |
+|                            IterateAsMutableArray |      .NET 7.0 |  100 |    129.07 ns |     2.602 ns |     5.136 ns |     824 B |
+|                            IterateAsMutableArray |      .NET 8.0 |  100 |    105.36 ns |     2.106 ns |     3.087 ns |     824 B |
+|                                                  |               |      |              |              |              |           |
+|                     IterateAsIReadOnlyCollection | .NET Core 3.1 |  100 |     835.7 ns |      7.41 ns |      6.94 ns |      64 B |
+|                     IterateAsIReadOnlyCollection |      .NET 5.0 |  100 |    801.34 ns |    15.660 ns |    17.406 ns |      64 B |
+|                     IterateAsIReadOnlyCollection |      .NET 6.0 |  100 |    928.58 ns |    16.061 ns |    13.412 ns |      64 B |
+|                     IterateAsIReadOnlyCollection |      .NET 7.0 |  100 |    879.08 ns |    17.478 ns |    29.679 ns |      64 B |
+|                     IterateAsIReadOnlyCollection |      .NET 8.0 |  100 |    345.50 ns |     6.365 ns |     6.536 ns |      64 B |
+|                                                  |               |      |              |              |              |           |
+|                           IterateAsReadOnlyArray | .NET Core 3.1 |  100 |     548.7 ns |      6.07 ns |      5.38 ns |     880 B |
+|                           IterateAsReadOnlyArray |      .NET 5.0 |  100 |    548.88 ns |    10.817 ns |    19.506 ns |     880 B |
+|                           IterateAsReadOnlyArray |      .NET 6.0 |  100 |    539.32 ns |    10.649 ns |    14.576 ns |     880 B |
+|                           IterateAsReadOnlyArray |      .NET 7.0 |  100 |    493.62 ns |     9.862 ns |    17.530 ns |     880 B |
+|                           IterateAsReadOnlyArray |      .NET 8.0 |  100 |    233.54 ns |     4.650 ns |     9.393 ns |     880 B |
+|                                                  |               |      |              |              |              |           |
+|  IterateAsImmutableListCastToIReadOnlyCollection | .NET Core 3.1 |  100 |  10,080.3 ns |    191.44 ns |    179.07 ns |    4920 B |
+|  IterateAsImmutableListCastToIReadOnlyCollection |      .NET 5.0 |  100 |  7,970.88 ns |   157.837 ns |   147.641 ns |    4920 B |
+|  IterateAsImmutableListCastToIReadOnlyCollection |      .NET 6.0 |  100 |  6,844.65 ns |   124.806 ns |   104.219 ns |    4920 B |
+|  IterateAsImmutableListCastToIReadOnlyCollection |      .NET 7.0 |  100 |  6,699.77 ns |   110.707 ns |   123.051 ns |    4920 B |
+|  IterateAsImmutableListCastToIReadOnlyCollection |      .NET 8.0 |  100 |  3,339.33 ns |    65.041 ns |    57.657 ns |    4920 B |
+|                                                  |               |      |              |              |              |           |
+|                          IterateAsIImmutableList | .NET Core 3.1 |  100 |   9,827.8 ns |     61.13 ns |     51.05 ns |    4920 B |
+|                          IterateAsIImmutableList |      .NET 5.0 |  100 |  7,752.44 ns |   108.453 ns |    96.141 ns |    4920 B |
+|                          IterateAsIImmutableList |      .NET 6.0 |  100 |  6,845.22 ns |    76.360 ns |    67.692 ns |    4920 B |
+|                          IterateAsIImmutableList |      .NET 7.0 |  100 |  6,660.65 ns |   132.590 ns |   157.839 ns |    4920 B |
+|                          IterateAsIImmutableList |      .NET 8.0 |  100 |  3,438.22 ns |    61.692 ns |    57.707 ns |    4920 B |
+|                                                  |               |      |              |              |              |           |
+| IterateAsImmutableArrayCastToIReadOnlyCollection | .NET Core 3.1 |  100 |     614.9 ns |      7.40 ns |      6.92 ns |     880 B |
+| IterateAsImmutableArrayCastToIReadOnlyCollection |      .NET 5.0 |  100 |    632.24 ns |    12.520 ns |    17.137 ns |     880 B |
+| IterateAsImmutableArrayCastToIReadOnlyCollection |      .NET 6.0 |  100 |    642.56 ns |    12.880 ns |    17.194 ns |     880 B |
+| IterateAsImmutableArrayCastToIReadOnlyCollection |      .NET 7.0 |  100 |    598.70 ns |    11.597 ns |    18.056 ns |     880 B |
+| IterateAsImmutableArrayCastToIReadOnlyCollection |      .NET 8.0 |  100 |    278.27 ns |     5.560 ns |    10.845 ns |     880 B |
+|                                                  |               |      |              |              |              |           |
+|                          IterateAsImmutableArray | .NET Core 3.1 |  100 |     149.6 ns |      2.69 ns |      2.52 ns |     824 B |
+|                          IterateAsImmutableArray |      .NET 5.0 |  100 |    129.41 ns |     2.620 ns |     5.751 ns |     824 B |
+|                          IterateAsImmutableArray |      .NET 6.0 |  100 |    130.14 ns |     2.593 ns |     4.404 ns |     824 B |
+|                          IterateAsImmutableArray |      .NET 7.0 |  100 |    122.71 ns |     2.472 ns |     4.994 ns |     824 B |
+|                          IterateAsImmutableArray |      .NET 8.0 |  100 |    114.83 ns |     2.294 ns |     3.062 ns |     824 B |
+|                                                  |               |      |              |              |              |           |
+|                                    IterateAsSpan | .NET Core 3.1 |  N/A |          N/A |          N/A |          N/A |         - |
+|                                    IterateAsSpan |      .NET 5.0 |  N/A |          N/A |          N/A |          N/A |         - |
+|                                    IterateAsSpan |      .NET 6.0 | 1000 |    245.31 ns |     4.869 ns |     9.496 ns |         - |
+|                                    IterateAsSpan |      .NET 7.0 | 1000 |    246.00 ns |     4.897 ns |     6.014 ns |         - |
+|                                    IterateAsSpan |      .NET 8.0 | 1000 |    246.96 ns |     4.966 ns |     6.457 ns |         - |
+|                                                  |               |      |              |              |              |           |
+|                             IterateAsMutableList | .NET Core 3.1 | 1000 |   3,168.5 ns |     46.34 ns |     43.35 ns |         - |
+|                             IterateAsMutableList |      .NET 5.0 | 1000 |  3,064.51 ns |    52.985 ns |    49.562 ns |         - |
+|                             IterateAsMutableList |      .NET 6.0 | 1000 |    872.42 ns |    15.731 ns |    16.832 ns |         - |
+|                             IterateAsMutableList |      .NET 7.0 | 1000 |    716.98 ns |    14.367 ns |    15.969 ns |         - |
+|                             IterateAsMutableList |      .NET 8.0 | 1000 |    484.34 ns |     9.332 ns |    17.980 ns |         - |
+|                                                  |               |      |              |              |              |           |
+|                            IterateAsMutableIList | .NET Core 3.1 | 1000 |   8,575.3 ns |     49.48 ns |     38.63 ns |      40 B |
+|                            IterateAsMutableIList |      .NET 5.0 | 1000 |  8,149.08 ns |   160.072 ns |   249.213 ns |      40 B |
+|                            IterateAsMutableIList |      .NET 6.0 | 1000 |  8,896.33 ns |   169.103 ns |   173.656 ns |      40 B |
+|                            IterateAsMutableIList |      .NET 7.0 | 1000 |  8,384.64 ns |   153.449 ns |   220.072 ns |      40 B |
+|                            IterateAsMutableIList |      .NET 8.0 | 1000 |  3,106.39 ns |    60.543 ns |    59.461 ns |      40 B |
+|                                                  |               |      |              |              |              |           |
+|                      IterateAsMutableICollection | .NET Core 3.1 | 1000 |   8,600.0 ns |     80.31 ns |     71.19 ns |      40 B |
+|                      IterateAsMutableICollection |      .NET 5.0 | 1000 |  8,092.11 ns |   151.778 ns |   155.865 ns |      40 B |
+|                      IterateAsMutableICollection |      .NET 6.0 | 1000 |  8,908.13 ns |   173.299 ns |   248.540 ns |      40 B |
+|                      IterateAsMutableICollection |      .NET 7.0 | 1000 |  8,437.38 ns |   166.475 ns |   340.063 ns |      40 B |
+|                      IterateAsMutableICollection |      .NET 8.0 | 1000 |  3,105.78 ns |    60.999 ns |    67.800 ns |      40 B |
+|                                                  |               |      |              |              |              |           |
+|                             IterateAsIEnumerable | .NET Core 3.1 | 1000 |   8,610.6 ns |     77.57 ns |     68.76 ns |      40 B |
+|                             IterateAsIEnumerable |      .NET 5.0 | 1000 |  8,094.28 ns |   147.501 ns |   196.909 ns |      40 B |
+|                             IterateAsIEnumerable |      .NET 6.0 | 1000 |  8,953.89 ns |   174.394 ns |   261.025 ns |      40 B |
+|                             IterateAsIEnumerable |      .NET 7.0 | 1000 |  8,324.44 ns |   150.546 ns |   251.529 ns |      40 B |
+|                             IterateAsIEnumerable |      .NET 8.0 | 1000 |  3,076.62 ns |    59.929 ns |    64.123 ns |      40 B |
+|                                                  |               |      |              |              |              |           |
+|                            IterateAsMutableArray | .NET Core 3.1 | 1000 |     808.1 ns |      9.81 ns |      8.19 ns |    8024 B |
+|                            IterateAsMutableArray |      .NET 5.0 | 1000 |    746.47 ns |    14.822 ns |    18.745 ns |    8024 B |
+|                            IterateAsMutableArray |      .NET 6.0 | 1000 |    791.07 ns |    13.542 ns |    18.537 ns |    8024 B |
+|                            IterateAsMutableArray |      .NET 7.0 | 1000 |    781.98 ns |    15.651 ns |    21.940 ns |    8024 B |
+|                            IterateAsMutableArray |      .NET 8.0 | 1000 |    743.54 ns |    14.167 ns |    12.559 ns |    8024 B |
+|                                                  |               |      |              |              |              |           |
+|                     IterateAsIReadOnlyCollection | .NET Core 3.1 | 1000 |   8,200.6 ns |    127.99 ns |    119.72 ns |      64 B |
+|                     IterateAsIReadOnlyCollection |      .NET 5.0 | 1000 |  7,573.45 ns |   113.343 ns |    94.646 ns |      64 B |
+|                     IterateAsIReadOnlyCollection |      .NET 6.0 | 1000 |  9,005.13 ns |   179.990 ns |   252.321 ns |      64 B |
+|                     IterateAsIReadOnlyCollection |      .NET 7.0 | 1000 |  8,668.80 ns |   162.846 ns |   305.864 ns |      64 B |
+|                     IterateAsIReadOnlyCollection |      .NET 8.0 | 1000 |  3,070.69 ns |    60.126 ns |    76.040 ns |      64 B |
+|                                                  |               |      |              |              |              |           |
+|                           IterateAsReadOnlyArray | .NET Core 3.1 | 1000 |   5,076.5 ns |     64.05 ns |     56.78 ns |    8080 B |
+|                           IterateAsReadOnlyArray |      .NET 5.0 | 1000 |  4,867.89 ns |    96.912 ns |   156.496 ns |    8080 B |
+|                           IterateAsReadOnlyArray |      .NET 6.0 | 1000 |  4,929.40 ns |    97.659 ns |   160.457 ns |    8080 B |
+|                           IterateAsReadOnlyArray |      .NET 7.0 | 1000 |  4,475.06 ns |    86.615 ns |   134.849 ns |    8080 B |
+|                           IterateAsReadOnlyArray |      .NET 8.0 | 1000 |  1,948.07 ns |    38.853 ns |    93.835 ns |    8080 B |
+|                                                  |               |      |              |              |              |           |
+|  IterateAsImmutableListCastToIReadOnlyCollection | .NET Core 3.1 | 1000 |  99,576.8 ns |  1,438.09 ns |  1,274.83 ns |   48120 B |
+|  IterateAsImmutableListCastToIReadOnlyCollection |      .NET 5.0 | 1000 | 74,719.02 ns | 1,458.366 ns | 1,844.366 ns |   48120 B |
+|  IterateAsImmutableListCastToIReadOnlyCollection |      .NET 6.0 | 1000 | 62,614.81 ns | 1,240.556 ns | 1,327.381 ns |   48120 B |
+|  IterateAsImmutableListCastToIReadOnlyCollection |      .NET 7.0 | 1000 | 65,955.88 ns | 1,314.931 ns | 1,565.332 ns |   48120 B |
+|  IterateAsImmutableListCastToIReadOnlyCollection |      .NET 8.0 | 1000 | 33,799.11 ns |   673.462 ns | 1,464.052 ns |   48120 B |
+|                                                  |               |      |              |              |              |           |
+|                          IterateAsIImmutableList | .NET Core 3.1 | 1000 |  98,902.6 ns |  1,153.25 ns |  1,022.33 ns |   48121 B |
+|                          IterateAsIImmutableList |      .NET 5.0 | 1000 | 74,918.27 ns | 1,493.586 ns | 2,411.862 ns |   48120 B |
+|                          IterateAsIImmutableList |      .NET 6.0 | 1000 | 65,774.12 ns | 1,305.544 ns | 2,753.835 ns |   48120 B |
+|                          IterateAsIImmutableList |      .NET 7.0 | 1000 | 67,807.60 ns | 1,284.156 ns | 2,411.956 ns |   48120 B |
+|                          IterateAsIImmutableList |      .NET 8.0 | 1000 | 31,823.79 ns |   632.937 ns | 1,173.190 ns |   48120 B |
+|                                                  |               |      |              |              |              |           |
+| IterateAsImmutableArrayCastToIReadOnlyCollection | .NET Core 3.1 | 1000 |   5,311.7 ns |     68.45 ns |     60.68 ns |    8080 B |
+| IterateAsImmutableArrayCastToIReadOnlyCollection |      .NET 5.0 | 1000 |  5,600.76 ns |   108.667 ns |   141.298 ns |    8080 B |
+| IterateAsImmutableArrayCastToIReadOnlyCollection |      .NET 6.0 | 1000 |  5,855.68 ns |   108.634 ns |   159.235 ns |    8080 B |
+| IterateAsImmutableArrayCastToIReadOnlyCollection |      .NET 7.0 | 1000 |  5,435.78 ns |   106.556 ns |   130.861 ns |    8080 B |
+| IterateAsImmutableArrayCastToIReadOnlyCollection |      .NET 8.0 | 1000 |  2,516.06 ns |    49.547 ns |    62.661 ns |    8080 B |
+|                                                  |               |      |              |              |              |           |
+|                          IterateAsImmutableArray | .NET Core 3.1 | 1000 |     810.0 ns |     12.69 ns |     11.25 ns |    8024 B |
+|                          IterateAsImmutableArray |      .NET 5.0 | 1000 |    769.17 ns |    14.466 ns |    27.171 ns |    8024 B |
+|                          IterateAsImmutableArray |      .NET 6.0 | 1000 |    824.53 ns |    18.319 ns |    52.560 ns |    8024 B |
+|                          IterateAsImmutableArray |      .NET 7.0 | 1000 |    793.43 ns |    15.659 ns |    22.953 ns |    8024 B |
+|                          IterateAsImmutableArray |      .NET 8.0 | 1000 |    760.47 ns |    15.204 ns |    26.226 ns |    8024 B |
 
 #### Observations
 
