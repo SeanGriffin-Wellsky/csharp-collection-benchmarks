@@ -6,9 +6,6 @@ namespace CollectionBenchmark
     {
         public static void Main(string[] args)
         {
-            //BenchmarkRunner.Run<IterationBenchy>();
-            //BenchmarkRunner.Run<LinqBenchy>(args: args);
-
             BenchmarkSwitcher
                 .FromAssembly(typeof(Program).Assembly)
                 .Run(args);
