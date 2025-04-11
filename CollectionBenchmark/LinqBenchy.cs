@@ -3,9 +3,14 @@ using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
+using BenchmarkDotNet.Jobs;
 
 namespace CollectionBenchmark
 {
+    [SimpleJob(RuntimeMoniker.Net60, baseline: true)]
+    [SimpleJob(RuntimeMoniker.Net70)]
+    [SimpleJob(RuntimeMoniker.Net80)]
+    [SimpleJob(RuntimeMoniker.Net90)]
     [MemoryDiagnoser(false)]
     public class LinqBenchy
     {

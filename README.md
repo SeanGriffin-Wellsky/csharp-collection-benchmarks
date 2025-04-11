@@ -25,8 +25,11 @@ This project contains microbenchmarks that are meant to help answer these questi
 
 As an aside, before getting to the C# benchmarks below, a quick note about the difference between the .NET immutable collections and the Guava immutable collections often used in Java development, since these are quite different. The Guava immutable collections _disable_ mutation and are meant for very fast and efficient consumption, whether single-threaded or multi-threaded. The .NET immutable collections, however, _enable_ mutation but do so in such a way that the modification is efficiently returned as a separate collection instance. This difference makes the Guava immutable collections appropriate for **consumption but not production**, while the .NET immutable collections are appropriate for **thread-safe production but not necessarily efficient consumption**.
 
-## Benchmarks
+## Benchmark Results
 
+See [IterationBenchmarkResults](IterationBenchmarkResults.md) for the results and conclusions for collection iteration.
+
+See [LinqBenchmarkResults](LinqBenchmarkResults.md) for the results and conclusions for collection aggregation using LINQ.
 
 ## Old benchmarks
 
