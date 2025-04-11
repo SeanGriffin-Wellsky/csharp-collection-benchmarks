@@ -129,27 +129,27 @@ Apple M3 Pro, 1 CPU, 12 logical and 12 physical cores
 
 Based on the benchmark results, here are the key conclusions:
 
-1. Runtime Evolution:
-- .NET 8.0 and 9.0 show significant performance improvements over .NET 6.0 and 7.0 across all tests
-- The most dramatic improvements are seen in .NET 9.0, particularly for mutable collection operations
+### 1. Runtime Evolution:
+* .NET 8.0 and 9.0 show significant performance improvements over .NET 6.0 and 7.0 across all tests
+* The most dramatic improvements are seen in .NET 9.0, particularly for mutable collection operations
 
-2. Best Performing Approaches:
-- For N=100 and N=1000, the fastest operations are:
-  - `AggregateAsMutableList`, `AggregateAsMutableIList`, `AggregateAsMutableICollection`, and `AggregateAsIReadOnlyCollection` in .NET 9.0 (~28-29ns for N=100, ~254-260ns for N=1000)
-  - These methods also have zero allocations in .NET 9.0
+### 2. Best Performing Approaches:
+* For N=100 and N=1000, the fastest operations are:
+  * `AggregateAsMutableList`, `AggregateAsMutableIList`, `AggregateAsMutableICollection`, and `AggregateAsIReadOnlyCollection` in .NET 9.0 (~28-29ns for N=100, ~254-260ns for N=1000)
+  * These methods also have zero allocations in .NET 9.0
 
-3. Collection Type Performance:
-- Mutable collections (List, IList, ICollection) perform best overall
-- IEnumerable operations are moderately performant but not the fastest
-- Array-based operations are generally faster than list-based operations
-- ImmutableList performs significantly worse than other collections (~1,400ns for N=100, ~13,000ns for N=1000 even in .NET 9.0)
+### 3. Collection Type Performance:
+* Mutable collections (List, IList, ICollection) perform best overall
+* IEnumerable operations are moderately performant but not the fastest
+* Array-based operations are generally faster than list-based operations
+* ImmutableList performs significantly worse than other collections (~1,400ns for N=100, ~13,000ns for N=1000 even in .NET 9.0)
 
-4. Memory Allocations:
-- Most collection operations allocate either 40B or 64B for small operations
-- Array-based operations have larger allocations (824B-880B for N=100, 8024B-8080B for N=1000)
-- ImmutableList has the highest memory allocation (4920B for N=100, 48120B for N=1000)
+### 4. Memory Allocations:
+* Most collection operations allocate either 40B or 64B for small operations
+* Array-based operations have larger allocations (824B-880B for N=100, 8024B-8080B for N=1000)
+* ImmutableList has the highest memory allocation (4920B for N=100, 48120B for N=1000)
 
-Recommendations:
+## Recommendations:
 1. Use mutable collections (List<T>, IList<T>, ICollection<T>) when possible, especially in .NET 9.0
 2. Avoid ImmutableList for performance-critical operations
 3. If immutability is required, prefer ImmutableArray over ImmutableList
